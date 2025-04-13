@@ -1,50 +1,110 @@
-# React + TypeScript + Vite
+# Vite with Chart
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application built with Vite that demonstrates interactive chart visualizations using Nivo charts.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Interactive line charts with time-series data
+- Dynamic x-axis formatting based on data range:
+  - Shows months when data spans less than 52 weeks
+  - Shows years when data spans 52 weeks or more
+- Baseline visualization with dotted line
+- Responsive design
+- Tooltips with detailed information
+- Weekly data granularity
 
-## Expanding the ESLint configuration
+## Components
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### LineChart
+A reusable line chart component that:
+- Accepts time-series data
+- Supports baseline visualization
+- Automatically formats x-axis based on data range
+- Provides interactive tooltips
+- Is fully responsive
 
-- Configure the top-level `parserOptions` property like this:
+### Demo3
+The main demonstration component that:
+- Shows weekly revenue data for the last 6 months
+- Includes a baseline at 145
+- Demonstrates the month-based x-axis formatting
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd vite-with-chart
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
 ```
+
+3. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── LineChart.tsx    # Reusable chart component
+│   └── Demo3.tsx        # Main demonstration component
+├── App.tsx              # Main application component
+├── main.tsx             # Application entry point
+└── App.css              # Global styles
+```
+
+## Technologies Used
+
+- React
+- Vite
+- TypeScript
+- Nivo Charts
+- CSS
+
+## Customization
+
+### Modifying the Chart
+
+To modify the chart appearance or behavior, edit the `LineChart` component in `src/components/LineChart.tsx`. Key customization options include:
+
+- Chart margins
+- Axis formatting
+- Point styling
+- Tooltip content
+- Baseline appearance
+
+### Changing the Data
+
+To update the data shown in the chart, modify the `chartData` array in `src/components/Demo3.tsx`. The data format should be:
+
+```typescript
+{
+  id: string,
+  data: Array<{
+    date: string,  // Format: 'YYYY-MM-DD'
+    value: number
+  }>
+}
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

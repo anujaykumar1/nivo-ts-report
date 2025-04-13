@@ -61,15 +61,21 @@ const LineChart: React.FC<LineChartProps> = ({ data, baseline }) => {
   return (
     <ResponsiveLine
       data={transformedData}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       xScale={{ type: 'time', format: '%Y-%m-%d', useUTC: false }}
       xFormat="time:%Y-%m-%d"
       yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
+      curve="monotoneX" // Smooth line like PowerBI
+      enableArea={false} // Disabled area fill
+      enableGridX={true}
+      enableGridY={true}
+      gridXValues={getTickValues()}
+      gridYValues={5} // Show 5 grid lines
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
+        tickSize: 0,
+        tickPadding: 10,
         tickRotation: 0,
         format: getXAxisFormat(),
         tickValues: getTickValues(),
@@ -78,60 +84,76 @@ const LineChart: React.FC<LineChartProps> = ({ data, baseline }) => {
         legendPosition: 'middle'
       }}
       axisLeft={{
-        tickSize: 5,
-        tickPadding: 5,
+        tickSize: 0,
+        tickPadding: 10,
         tickRotation: 0,
         legend: 'Value',
         legendOffset: -40,
         legendPosition: 'middle'
       }}
-      pointSize={10}
+      colors={['#0078d4']} // PowerBI blue
+      lineWidth={2}
+      pointSize={0} // Hide points by default
       pointColor={{ theme: 'background' }}
       pointBorderWidth={2}
       pointBorderColor={{ from: 'serieColor' }}
       pointLabelYOffset={-12}
+      enablePoints={false} // Hide points by default
       useMesh={true}
-      legends={[
-        {
-          anchor: 'bottom-right',
-          direction: 'column',
-          justify: false,
-          translateX: 100,
-          translateY: 0,
-          itemsSpacing: 0,
-          itemDirection: 'left-to-right',
-          itemWidth: 80,
-          itemHeight: 20,
-          itemOpacity: 0.75,
-          symbolSize: 12,
-          symbolShape: 'circle',
-          symbolBorderColor: 'rgba(0, 0, 0, .5)',
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemBackground: 'rgba(0, 0, 0, .03)',
-                itemOpacity: 1
-              }
+      enableCrosshair={true} // Show crosshair on hover
+      crosshairType="cross" // Show both vertical and horizontal lines
+      theme={{
+        axis: {
+          ticks: {
+            text: {
+              fill: '#666666',
+              fontSize: 12,
+              fontFamily: 'Segoe UI, sans-serif'
             }
-          ]
+          },
+          legend: {
+            text: {
+              fill: '#666666',
+              fontSize: 14,
+              fontFamily: 'Segoe UI, sans-serif'
+            }
+          }
+        },
+        grid: {
+          line: {
+            stroke: '#e0e0e0',
+            strokeWidth: 1
+          }
+        },
+        crosshair: {
+          line: {
+            stroke: '#666666',
+            strokeWidth: 1,
+            strokeDasharray: '4 4'
+          }
         }
-      ]}
+      }}
       tooltip={({ point }) => (
         <div
           style={{
             background: 'white',
-            padding: '9px 12px',
-            border: '1px solid #ccc',
+            padding: '8px 12px',
+            border: '1px solid #e0e0e0',
             borderRadius: '4px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            fontSize: '12px',
+            fontFamily: 'Segoe UI, sans-serif'
           }}
         >
-          <div style={{ color: point.serieColor }}>
-            <strong>{point.serieId}</strong>
+          <div style={{ color: point.serieColor, fontWeight: 'bold' }}>
+            {point.serieId}
           </div>
-          <div>Date: {new Date(point.data.x).toLocaleDateString()}</div>
-          <div>Value: {point.data.y}</div>
+          <div style={{ color: '#666666' }}>
+            {new Date(point.data.x).toLocaleDateString()}
+          </div>
+          <div style={{ color: '#666666' }}>
+            Value: {point.data.y}
+          </div>
         </div>
       )}
       markers={
@@ -141,9 +163,9 @@ const LineChart: React.FC<LineChartProps> = ({ data, baseline }) => {
                 axis: 'y',
                 value: baseline,
                 lineStyle: { 
-                  stroke: '#ff0000', 
-                  strokeWidth: 2,
-                  strokeDasharray: '5,5' // This creates the dotted line effect
+                  stroke: '#666666', 
+                  strokeWidth: 1,
+                  strokeDasharray: '4 4' // Subtle dotted line
                 },
                 legend: 'Baseline',
                 legendOrientation: 'horizontal',
